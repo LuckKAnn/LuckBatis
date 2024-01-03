@@ -1,6 +1,7 @@
 package com.luck.lizzie.batis.session.defaults;
 
 import com.luck.lizzie.batis.binding.MapperRegistry;
+import com.luck.lizzie.batis.session.Configuration;
 import com.luck.lizzie.batis.session.SqlSession;
 import com.luck.lizzie.batis.session.SqlSessionFactory;
 
@@ -12,14 +13,19 @@ import com.luck.lizzie.batis.session.SqlSessionFactory;
  * @Version 1.0
  */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
-    private MapperRegistry mapperRegistry = new MapperRegistry();
 
-    public MapperRegistry getMapperRegistry() {
-        return mapperRegistry;
+    private Configuration configuration;
+
+    public DefaultSqlSessionFactory(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     @Override
     public SqlSession openSession() {
-        return new DefaultSqlSession(mapperRegistry);
+        return new DefaultSqlSession(configuration);
     }
 }

@@ -35,7 +35,7 @@ public class MapperProxy<T> implements InvocationHandler {
         } else {
             // 代理方法
             log.info("Proxy Method has invoked , className:{}, methodName:{}", clazz.getName(), method.getName());
-            return sqlSession.selectOne(method.getName(), args);
+            return sqlSession.selectOne(clazz.getName() + "." + method.getName(), args);
         }
     }
 }

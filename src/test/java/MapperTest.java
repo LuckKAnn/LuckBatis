@@ -1,13 +1,18 @@
 import com.luck.lizzie.batis.binding.MapperProxy;
 import com.luck.lizzie.batis.binding.MapperProxyFactory;
 import com.luck.lizzie.batis.binding.MapperRegistry;
+import com.luck.lizzie.batis.io.Resources;
+import com.luck.lizzie.batis.session.Configuration;
 import com.luck.lizzie.batis.session.SqlSession;
+import com.luck.lizzie.batis.session.SqlSessionFactory;
+import com.luck.lizzie.batis.session.SqlSessionFactoryBuilder;
 import com.luck.lizzie.batis.session.defaults.DefaultSqlSession;
 import com.luck.lizzie.batis.session.defaults.DefaultSqlSessionFactory;
 import org.junit.Test;
 import service.IOrderDao;
 import service.IUserDao;
 
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,12 +36,26 @@ public class MapperTest {
 
     @Test
     public void testRegistryMapper() {
-        DefaultSqlSessionFactory defaultSqlSessionFactory = new DefaultSqlSessionFactory();
-        MapperRegistry mapperRegistry = defaultSqlSessionFactory.getMapperRegistry();
+        Configuration configuration = new Configuration();
+        DefaultSqlSessionFactory defaultSqlSessionFactory = new DefaultSqlSessionFactory(configuration);
+        MapperRegistry mapperRegistry = defaultSqlSessionFactory.getConfiguration().getMapperRegistry();
         mapperRegistry.addMapper("service");
         SqlSession sqlSession = defaultSqlSessionFactory.openSession();
         // sqlSession.selectOne("sdqdqw");
         IOrderDao mapper = sqlSession.getMapper(IOrderDao.class);
         System.out.println(mapper.queryOrderById(111L));
+    }
+
+
+    @Test
+    public void testBuildSqlSessionFactory() {
+        InputStreamReader inputStreamReader = Resources.loadResourceReader("mybatis-config-datasource.xml");
+        SqlSessionFactory defaultSqlSessionFactory = SqlSessionFactoryBuilder.build(inputStreamReader);
+
+        SqlSession sqlSession = defaultSqlSessionFactory.openSession();
+
+        IUserDao mapper = sqlSession.getMapper(IUserDao.class);
+        System.out.println(mapper.queryUserInfo("111"));
+
     }
 }
