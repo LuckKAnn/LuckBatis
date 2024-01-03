@@ -1,5 +1,6 @@
 package com.luck.lizzie.batis.binding;
 
+import com.luck.lizzie.batis.session.SqlSession;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -16,12 +17,12 @@ import java.util.Map;
 @Slf4j
 public class MapperProxy<T> implements InvocationHandler {
 
-    private Map<String, String> sqlSessions;
+    private SqlSession sqlSession;
 
     private Class<T> clazz;
 
-    public MapperProxy(Map<String, String> sqlSessions, Class<T> clazz) {
-        this.sqlSessions = sqlSessions;
+    public MapperProxy(SqlSession sqlSession, Class<T> clazz) {
+        this.sqlSession = sqlSession;
         this.clazz = clazz;
     }
 
@@ -33,8 +34,8 @@ public class MapperProxy<T> implements InvocationHandler {
             return method.invoke(this, args);
         } else {
             // 代理方法
-            log.info("method proxy invoked");
-            return String.format("你的方法被代理了，%s, %s", clazz.getName(), method.getName());
+            log.info("Proxy Method has invoked , className:{}, methodName:{}", clazz.getName(), method.getName());
+            return sqlSession.selectOne(method.getName(), args);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.luck.lizzie.batis.binding;
 
 import cn.hutool.core.util.ClassLoaderUtil;
+import com.luck.lizzie.batis.session.SqlSession;
 
 import java.lang.reflect.Proxy;
 import java.util.Map;
@@ -22,13 +23,13 @@ public class MapperProxyFactory<T> {
     /**
      * factory design model . create MapperProxy Only,
      *
-     * @param sqlSessions sqlSession
+     * @param sqlSession sqlSession
      * @return proxy target
      * @see MapperProxy
      */
-    public T newInstance(Map<String, String> sqlSessions) {
+    public T newInstance(SqlSession sqlSession) {
         return (T) Proxy.newProxyInstance(ClassLoaderUtil.getClassLoader(),
                 new Class[]{mapperInterface},
-                new MapperProxy<T>(sqlSessions, mapperInterface));
+                new MapperProxy<T>(sqlSession, mapperInterface));
     }
 }
